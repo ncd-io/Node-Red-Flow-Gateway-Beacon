@@ -1,0 +1,74 @@
+[
+    {
+        "id": "34d3086560d62290",
+        "type": "tab",
+        "label": "Gateway Beacon Packet",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "41301ec593b8923a",
+        "type": "inject",
+        "z": "34d3086560d62290",
+        "name": "",
+        "props": [],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 270,
+        "y": 420,
+        "wires": [
+            [
+                "30cb7ec6dc08bea2"
+            ]
+        ]
+    },
+    {
+        "id": "30cb7ec6dc08bea2",
+        "type": "function",
+        "z": "34d3086560d62290",
+        "name": "Check Devices",
+        "func": "if(flow.get(\"transmit_counter\") === undefined){\n    flow.set(\"transmit_counter\", 1);\n}\nvar counter = flow.get(\"transmit_counter\");\nif(counter == 0xFF){\n    counter = 0;\n}\nmsg.payload = {};\nmsg.payload.address = \"00:00:00:00:00:00:ff:ff\"\nmsg.payload.data = [0x7F,0x00,0x01,0x04,0x00,counter++,0xFF,0xFF,0x00];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 420,
+        "wires": [
+            [
+                "74db82a42ed322f1"
+            ]
+        ]
+    },
+    {
+        "id": "74db82a42ed322f1",
+        "type": "ncd-gateway-node",
+        "z": "34d3086560d62290",
+        "name": "",
+        "connection": "3a158777559a1790",
+        "unknown_devices": 0,
+        "outputs": 1,
+        "x": 710,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3a158777559a1790",
+        "type": "ncd-gateway-config",
+        "name": "",
+        "comm_type": "serial",
+        "ip_address": "",
+        "tcp_port": "2101",
+        "port": "/dev/ttymxc2",
+        "baudRate": "115200",
+        "pan_id": "7FFF",
+        "rssi": true
+    }
+]
